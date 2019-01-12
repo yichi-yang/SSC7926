@@ -28,7 +28,7 @@ void setup()
             delay(1000);
             for(int k=0; k<bufferLen; k++)
             {
-                Serial.printf("5d", buffer[k]);
+                Serial.printf("%5d", buffer[k]);
             }
             Serial.printf("\n");
         }
