@@ -2,12 +2,12 @@
 #include "BufferDMA.h"
 #include "ADC.h"
 
-volatile int8_t BufferDMA::half_complete = -1;
-DMAChannel BufferDMA::*dmaChannel = nullptr;
-volatile int16_t BufferDMA::*p_elems = nullptr;
-uint16_t BufferDMA::b_size = 0;
-uint8_t BufferDMA::ADC_number = 0;
-volatile uint32_t BufferDMA::*ADC_RA = nullptr;
+volatile int8_t half_complete = -1;
+DMAChannel *dmaChannel = nullptr;
+volatile int16_t *p_elems = nullptr;
+uint16_t b_size = 0;
+uint8_t ADC_number = 0;
+volatile uint32_t *ADC_RA = nullptr;
 
 // Constructor
 BufferDMA::BufferDMA(volatile int16_t *buffer, uint32_t len, uint8_t ADC_num)
@@ -63,11 +63,11 @@ BufferDMA::~BufferDMA()
 
 void dma_half_complete_isr()
 {
-    if (BufferDMA::half_complete != -1)
+    if (half_complete != -1)
     {
         // ERROR
         noInterrupts();
         return;
     }
-    BufferDMA::half_complete = (BufferDMA::dmaChannel->TCD->BITER > BufferDMA::b_size / 2) ? 0 : 1;
+    half_complete = (dmaChannel->TCD->BITER > b_size / 2) ? 0 : 1;
 }

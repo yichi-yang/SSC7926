@@ -24,15 +24,18 @@ void setup()
         memset((void *)buffer, 0, sizeof(buffer));
         for (int j = 0; j < bufferLen; j++)
         {
-            adc->adc0->startSingleRead(readPin);
+            // adc->adc0->startSingleRead(readPin);
+            adc->analogRead(readPin, ADC_0);
             delay(1000);
-            for(int k=0; k<bufferLen; k++)
+            for (int k = 0; k < bufferLen; k++)
             {
                 Serial.printf("%5d", buffer[k]);
             }
             Serial.printf("\n");
         }
+        Serial.printf("RESET\n");
     }
+    Serial.printf("END\n");
 }
 
 void loop()

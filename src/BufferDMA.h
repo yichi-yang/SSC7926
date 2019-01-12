@@ -24,10 +24,10 @@ class BufferDMA
     // static uint16_t size() { return b_size; }
 
     //! Pointer to the data
-    static volatile int16_t *const buffer() { return p_elems; }
+    // static volatile int16_t *const buffer() { return p_elems; }
 
     //! DMAChannel to handle all low level DMA code.
-    static DMAChannel *dmaChannel;
+    // static DMAChannel *dmaChannel;
 
     // the buffer needs to be aligned, so use malloc instead of new
     // see http://stackoverflow.com/questions/227897/solve-the-memory-alignment-in-c-interview-question-that-stumped-me/
@@ -40,22 +40,22 @@ class BufferDMA
     // uint16_t b_end;
 
     //! Pointer to the elements of the buffer
-    static volatile int16_t *p_elems;
+    // static volatile int16_t *p_elems;
 
-    static volatile int8_t half_complete;
+    // static volatile int8_t half_complete;
 
     //! Size of buffer
-    static uint16_t b_size;
+    // static uint16_t b_size;
 
   protected:
   private:
     //! ADC module of the instance
-    static uint8_t ADC_number;
+    // static uint8_t ADC_number;
 
     // //! Increases the pointer modulo 2*size-1
     // uint16_t increase(uint16_t p);
 
-    static volatile uint32_t *ADC_RA;
+    // static volatile uint32_t *ADC_RA;
 };
 
 #endif // RINGBUFFERDMA_H
