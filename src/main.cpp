@@ -6,6 +6,8 @@
 const int readPin = A9;
 const int bufferLen = 16;
 
+// elapsedMillis time;
+
 // ClockGenerator clock;
 
 void setup()
@@ -26,12 +28,21 @@ void setup()
         {
             // adc->adc0->startSingleRead(readPin);
             adc->analogRead(readPin, ADC_0);
+            // time = 0;
+            // while (time < 1000)
+            // {
+            //     // if (half_complete != -1)
+            //     // {
+            //     //     half_complete = -1;
+            //     //     Serial.printf("Clear HC\n");
+            //     // }
+            // }
             delay(1000);
             for (int k = 0; k < bufferLen; k++)
             {
                 Serial.printf("%8hu", buffer[k]);
             }
-            Serial.printf("\n");
+            //Serial.printf("    >%2d\n", (dmaChannel->TCD->CITER > 8));
         }
         Serial.printf("RESET\n");
     }
