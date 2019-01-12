@@ -63,14 +63,11 @@ BufferDMA::~BufferDMA()
 
 void dma_half_complete_isr()
 {
-    // if (half_complete != -1)
-    // {
-    //     // ERROR
-    //     noInterrupts();
-    //     Serial.println("Buffer overrun");
-    //     Serial.println("DMA_ISR");
-    //     for(;;);
-    //     return;
-    // }
-    // half_complete = (dmaChannel->TCD->CITER > b_size / 2) ? 0 : 1;
+    if (half_complete != -1)
+    {
+        // ERROR
+        noInterrupts();
+        return;
+    }
+    half_complete = (dmaChannel->TCD->BITER > b_size / 2) ? 0 : 1;
 }
