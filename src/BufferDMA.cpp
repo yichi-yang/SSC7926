@@ -2,7 +2,7 @@
 #include "BufferDMA.h"
 #include "ADC.h"
 
-volatile int8_t half_complete = -1;
+volatile int8_t data_ready = 0;
 DMAChannel *dmaChannel = nullptr;
 volatile int16_t *p_elems = nullptr;
 uint16_t b_size = 0;
@@ -18,7 +18,8 @@ BufferDMA::BufferDMA(volatile int16_t *buffer, uint32_t len, uint8_t ADC_num)
     ADC_RA = &ADC0_RA + (uint32_t)0x20000 * ADC_number;
     if (dmaChannel == nullptr)
         dmaChannel = new DMAChannel(); // reserve a DMA channel
-    //digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWriteFast(LED_BUILTIN, LOW);
 }
 
 void BufferDMA::start()
@@ -63,12 +64,17 @@ BufferDMA::~BufferDMA()
 
 void dma_half_complete_isr()
 {
+    dmaChannel->clearInterrupt();
+    digitalWriteFast(LED_BUILTIN, HIGH);
     // if (half_complete != -1)
     // {
     //     // ERROR
+    //     Serial.println("Buffer overrun");
     //     noInterrupts();
+    //     for (;;)
+    //         ;
     //     return;
     // }
-    // // Not disabling interrupts after the first interrupt seems to freeze the program ->
-    // half_complete = (dmaChannel->TCD->CITER > b_size / 2) ? 0 : 1; 
+    data_ready++;
+    digitalWriteFast(LED_BUILTIN, LOW);
 }
