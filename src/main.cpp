@@ -23,7 +23,7 @@ void setup()
     dmaBuffer.start();
     for (int i = 0; i < 3; i++)
     {
-        memset((void *)buffer, 0, sizeof(buffer));
+        memset((void *)buffer, 0x0, sizeof(buffer));
         for (int j = 0; j < bufferLen; j++)
         {
             // adc->adc0->startSingleRead(readPin);
@@ -40,7 +40,7 @@ void setup()
             delay(1000);
             for (int k = 0; k < bufferLen; k++)
             {
-                Serial.printf("%5d", buffer[k]);
+                Serial.printf("%8hu", buffer[k]);
             }
             //Serial.printf("    >%2d\n", (dmaChannel->TCD->CITER > 8));
         }
