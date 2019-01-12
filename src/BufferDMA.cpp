@@ -28,7 +28,7 @@ void BufferDMA::start()
 
     dmaChannel->destinationBuffer((uint16_t *)p_elems, sizeof(uint16_t) * b_size);
 
-    // dmaChannel->transferSize(sizeof(uint16_t)); // both SRC and DST size
+    dmaChannel->transferSize(sizeof(uint16_t)); // both SRC and DST size
 
     // dmaChannel->transferCount(b_size); // transfer b_size values
 
