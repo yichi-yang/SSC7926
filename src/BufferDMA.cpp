@@ -69,6 +69,6 @@ void dma_half_complete_isr()
     //     noInterrupts();
     //     return;
     // }
-    // this seems to freeze the program ->
+    // // Not disabling interrupts after the first interrupt seems to freeze the program ->
     // half_complete = (dmaChannel->TCD->CITER > b_size / 2) ? 0 : 1; 
 }
