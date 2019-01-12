@@ -63,11 +63,12 @@ BufferDMA::~BufferDMA()
 
 void dma_half_complete_isr()
 {
-    if (half_complete != -1)
-    {
-        // ERROR
-        noInterrupts();
-        return;
-    }
-    half_complete = (dmaChannel->TCD->BITER > b_size / 2) ? 0 : 1;
+    // if (half_complete != -1)
+    // {
+    //     // ERROR
+    //     noInterrupts();
+    //     return;
+    // }
+    // this seems to freeze the program ->
+    // half_complete = (dmaChannel->TCD->CITER > b_size / 2) ? 0 : 1; 
 }

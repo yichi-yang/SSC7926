@@ -29,9 +29,9 @@ void setup()
             delay(1000);
             for (int k = 0; k < bufferLen; k++)
             {
-                Serial.printf("%8hu", buffer[k]);
+                Serial.printf("%6hu", buffer[k]);
             }
-            Serial.printf("\n");
+            Serial.printf("      [%2d]\n", half_complete);
         }
         Serial.printf("RESET\n");
     }

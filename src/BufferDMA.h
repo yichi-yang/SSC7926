@@ -6,6 +6,8 @@
 
 void dma_half_complete_isr();
 
+extern volatile int8_t half_complete;
+
 /** Class RingBufferDMA implements a DMA ping-pong buffer of fixed size
 */
 class BufferDMA
