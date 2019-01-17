@@ -7,6 +7,8 @@
 #include "WProgram.h"
 #endif
 
+#include "ADC.h"
+
 /* // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define FREQUENCYTIMER2_PIN  10
@@ -47,6 +49,7 @@
 // Pin ROG and STEP
 #define PIN_ROG 255
 #define PIN_STEP 255
+#define PIN_SIG 255
 
 class ClockGenerator
 {
@@ -54,7 +57,7 @@ class ClockGenerator
   //   static void (*onOverflow)(); // not really public, but I can't work out the 'friend' for the SIGNAL
 
 public:
-  ClockGenerator();
+  ClockGenerator(ADC* p);
   static void setPeriod(unsigned long);
   static void config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step);
   // static unsigned long getPeriod();
@@ -65,6 +68,7 @@ public:
   volatile static uint32_t current_line, current_cycle;
   static uint8_t step_pin_status;
   static uint32_t max_line, cycle_per_line, cycle_per_step;
+  static ADC *adc_ptr;
 };
 
 #endif

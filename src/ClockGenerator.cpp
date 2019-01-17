@@ -11,9 +11,11 @@ uint8_t ClockGenerator::step_pin_status = LOW;
 uint32_t ClockGenerator::max_line = 0;
 uint32_t ClockGenerator::cycle_per_line = 0;
 uint32_t ClockGenerator::cycle_per_step = 0;
+ADC *ClockGenerator::adc_ptr = nullptr;
 
-ClockGenerator::ClockGenerator()
+ClockGenerator::ClockGenerator(ADC *p)
 {
+    adc_ptr = p;
     CORE_PIN5_CONFIG = PORT_PCR_MUX(2) | PORT_PCR_DSE | PORT_PCR_SRE;
     step_pin_status = LOW;
     NVIC_SET_PRIORITY(IRQ_CMT, 0);
@@ -245,6 +247,7 @@ void ClockGenerator::enable()
     current_line = 0;
     pinMode(PIN_ROG, OUTPUT);
     pinMode(PIN_STEP, OUTPUT);
+    pinMode(PIN_SIG, INPUT);
     NVIC_ENABLE_IRQ(IRQ_CMT);
     bitSet(CMT_MSC, MCGEN);
 }
@@ -289,6 +292,8 @@ void cmt_isr(void)
         digitalWriteFast(PIN_ROG, HIGH);
     }
 
+    ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG);
+
     if ((ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
     {
         digitalWriteFast(PIN_STEP, HIGH);
@@ -314,4 +319,11 @@ void cmt_isr(void)
     {
         ClockGenerator::current_cycle++;
     }
+}
+
+void ClockGenerator::config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step)
+{
+    max_line = _line_number;
+    cycle_per_line = _cycle_per_line;
+    cycle_per_step = _cycle_per_line;
 }

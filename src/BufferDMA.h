@@ -6,8 +6,8 @@
 
 void dma_half_complete_isr();
 
-extern volatile int8_t data_ready;
-extern DMAChannel *dmaChannel;
+// extern volatile int8_t data_ready;
+// extern DMAChannel *dmaChannel;
 
 /** Class RingBufferDMA implements a DMA ping-pong buffer of fixed size
 */
@@ -22,6 +22,13 @@ class BufferDMA
 
     //! Start DMA operation
     static void start();
+
+    static volatile int8_t data_ready;
+    static DMAChannel *dmaChannel;
+    static volatile int16_t *p_elems;
+    static uint16_t b_size;
+    static uint8_t ADC_number;
+    static volatile uint32_t *ADC_RA;
 
     //! Length of the buffer
     // static uint16_t size() { return b_size; }
@@ -50,8 +57,8 @@ class BufferDMA
     //! Size of buffer
     // static uint16_t b_size;
 
-  protected:
-  private:
+    //   protected:
+    //   private:
     //! ADC module of the instance
     // static uint8_t ADC_number;
 

@@ -2,12 +2,12 @@
 #include "BufferDMA.h"
 #include "ADC.h"
 
-volatile int8_t data_ready = 0;
-DMAChannel *dmaChannel = nullptr;
-volatile int16_t *p_elems = nullptr;
-uint16_t b_size = 0;
-uint8_t ADC_number = 0;
-volatile uint32_t *ADC_RA = nullptr;
+volatile int8_t BufferDMA::data_ready = 0;
+DMAChannel *BufferDMA::dmaChannel = nullptr;
+volatile int16_t *BufferDMA::p_elems = nullptr;
+uint16_t BufferDMA::b_size = 0;
+uint8_t BufferDMA::ADC_number = 0;
+volatile uint32_t *BufferDMA::ADC_RA = nullptr;
 
 // Constructor
 BufferDMA::BufferDMA(volatile int16_t *buffer, uint32_t len, uint8_t ADC_num)
@@ -58,9 +58,9 @@ void BufferDMA::start()
     Serial.print("DADDR=");
     Serial.println((uint32_t)dmaChannel->TCD->DADDR, HEX);
     Serial.print("CITER=");
-    Serial.println((uint32_t)dmaChannel->TCD->CITER);  
+    Serial.println((uint32_t)dmaChannel->TCD->CITER);
 
-    dmaChannel->destinationBuffer((uint16_t *)p_elems, sizeof(uint16_t) * b_size);  
+    dmaChannel->destinationBuffer((uint16_t *)p_elems, sizeof(uint16_t) * b_size);
 
     //digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
 }
@@ -76,7 +76,7 @@ BufferDMA::~BufferDMA()
 
 void dma_half_complete_isr()
 {
-    dmaChannel->clearInterrupt();
+    BufferDMA::dmaChannel->clearInterrupt();
     digitalWriteFast(LED_BUILTIN, HIGH);
     // if (half_complete != -1)
     // {
@@ -87,6 +87,6 @@ void dma_half_complete_isr()
     //         ;
     //     return;
     // }
-    data_ready++;
+    BufferDMA::data_ready++;
     digitalWriteFast(LED_BUILTIN, LOW);
 }
