@@ -319,6 +319,7 @@ void cmt_isr(void)
     {
         ClockGenerator::current_cycle++;
     }
+    Serial.printf("CMT ISR\n");
 }
 
 void ClockGenerator::config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step)

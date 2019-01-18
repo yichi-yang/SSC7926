@@ -49,7 +49,7 @@
 // Pin ROG and STEP
 #define PIN_ROG 255
 #define PIN_STEP 255
-#define PIN_SIG 255
+#define PIN_SIG A9
 
 class ClockGenerator
 {

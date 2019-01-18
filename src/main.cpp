@@ -19,8 +19,8 @@ void setup()
     memset((void *)buffer, 0x0, sizeof(buffer));
     BufferDMA dmaBuffer(buffer, bufferLen, ADC_0);
     ClockGenerator clock(adc);
-    clock.setPeriod(100000);
-    clock.config(1, bufferLen / 2, 2);
+    clock.setPeriod(500000L);
+    clock.config(8, bufferLen / 2, 2);
     Serial.begin(9600);
     adc->setAveraging(8);
     adc->setResolution(12);
@@ -38,7 +38,7 @@ void setup()
     clock.enable();
 
     time = 0;
-    while (time < 1000)
+    while (true)
     {
         if (BufferDMA::data_ready)
         {
@@ -50,7 +50,7 @@ void setup()
             }
             Serial.print("Read buffer: ");
             memcpy((void *)readout_buffer, (void *)(buffer + second_half * bufferLen / 2), sizeof(readout_buffer));
-            memset((void *)(buffer + second_half * bufferLen / 2), 0x0, sizeof(readout_buffer));
+            // memset((void *)(buffer + second_half * bufferLen / 2), 0x0, sizeof(readout_buffer));
             for (int k = 0; k < bufferLen / 2; k++)
             {
                 Serial.printf("%6hu", readout_buffer[k]);
