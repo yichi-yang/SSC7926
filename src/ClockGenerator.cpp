@@ -19,6 +19,8 @@ ClockGenerator::ClockGenerator(ADC *p)
     CORE_PIN5_CONFIG = PORT_PCR_MUX(2) | PORT_PCR_DSE | PORT_PCR_SRE;
     step_pin_status = LOW;
     NVIC_SET_PRIORITY(IRQ_CMT, 0);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWriteFast(LED_BUILTIN, LOW);
 }
 
 void ClockGenerator::setPeriod(unsigned long period)
@@ -27,7 +29,8 @@ void ClockGenerator::setPeriod(unsigned long period)
 
     if (period == 0)
         period = 1;
-    period *= (F_BUS / 1000000);
+    period = (int)((double)period * F_BUS / 1000000000L);
+    Serial.println(period);
     if (period < 65535 * 16)
     {
         bdiv = 0;
@@ -292,6 +295,12 @@ void cmt_isr(void)
         digitalWriteFast(PIN_ROG, HIGH);
     }
 
+    if (ClockGenerator::adc_ptr->adc0->isConverting())
+    {
+        digitalWriteFast(LED_BUILTIN, HIGH);
+        for (;;)
+            ;
+    }
     ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG);
 
     if ((ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
@@ -319,7 +328,7 @@ void cmt_isr(void)
     {
         ClockGenerator::current_cycle++;
     }
-    Serial.printf("CMT ISR\n");
+    // Serial.printf("CMT ISR\n");
 }
 
 void ClockGenerator::config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step)

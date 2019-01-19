@@ -4,7 +4,7 @@
 #include "BufferDMA.h"
 
 const int readPin = A9;
-const int bufferLen = 16;
+const int bufferLen = 4096;
 
 elapsedMillis time;
 
