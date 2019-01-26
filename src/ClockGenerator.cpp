@@ -311,6 +311,7 @@ void cmt_isr(void)
     else if (ClockGenerator::step_pin_status)
     {
         digitalWriteFast(PIN_STEP, LOW);
+        ClockGenerator::step_pin_status = HIGH;
     }
 
     if (ClockGenerator::current_cycle == ClockGenerator::cycle_per_line - 1)
@@ -335,5 +336,5 @@ void ClockGenerator::config(uint32_t _line_number, uint32_t _cycle_per_line, uin
 {
     max_line = _line_number;
     cycle_per_line = _cycle_per_line;
-    cycle_per_step = _cycle_per_line;
+    cycle_per_step = _cycle_per_step;
 }

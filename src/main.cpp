@@ -33,7 +33,7 @@ void setup()
     {
     }
 
-    clock.setPeriod(3200);
+    clock.setPeriod(3600);
     clock.config(64, bufferLen / 2, 16);
 
     adc->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);

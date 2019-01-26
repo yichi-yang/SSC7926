@@ -47,8 +47,8 @@
 #define IROPEN 5
 
 // Pin ROG and STEP
-#define PIN_ROG 255
-#define PIN_STEP 255
+#define PIN_ROG 27
+#define PIN_STEP 25
 #define PIN_SIG A9
 
 class ClockGenerator
