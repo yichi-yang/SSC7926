@@ -23,7 +23,11 @@ class BufferDMA
     //! Start DMA operation
     static void start();
 
+    friend void dma_half_complete_isr();
+
     static volatile int8_t data_ready;
+
+  private:
     static DMAChannel *dmaChannel;
     static volatile int16_t *p_elems;
     static uint16_t b_size;

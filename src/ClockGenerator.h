@@ -53,22 +53,25 @@
 
 class ClockGenerator
 {
-  // public:
-  //   static void (*onOverflow)(); // not really public, but I can't work out the 'friend' for the SIGNAL
+    // public:
+    //   static void (*onOverflow)(); // not really public, but I can't work out the 'friend' for the SIGNAL
 
-public:
-  ClockGenerator(ADC* p);
-  static void setPeriod(unsigned long);
-  static void config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step);
-  // static unsigned long getPeriod();
-  // static void setOnOverflow(void (*)());
-  static void enable();
-  static void disable();
-  static uint8_t is_active();
-  volatile static uint32_t current_line, current_cycle;
-  static uint8_t step_pin_status;
-  static uint32_t max_line, cycle_per_line, cycle_per_step;
-  static ADC *adc_ptr;
+  public:
+    ClockGenerator(ADC *p);
+    static void setPeriod(unsigned long);
+    static void config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step);
+    // static unsigned long getPeriod();
+    // static void setOnOverflow(void (*)());
+    static void enable();
+    static void disable();
+    static uint8_t is_active();
+    friend void cmt_isr(void);
+
+  private:
+    volatile static uint32_t current_line, current_cycle;
+    static uint8_t step_pin_status;
+    static uint32_t max_line, cycle_per_line, cycle_per_step;
+    static ADC *adc_ptr;
 };
 
 #endif
