@@ -319,11 +319,11 @@ void cmt_isr(void)
 
         ClockGenerator::current_line++;
         ClockGenerator::current_cycle = 0;
-        if (ClockGenerator::current_line == ClockGenerator::max_line)
-        {
-            bitClear(CMT_MSC, MCGEN);
-            NVIC_DISABLE_IRQ(IRQ_CMT);
-        }
+        // if (ClockGenerator::current_line == ClockGenerator::max_line)
+        // {
+        //     bitClear(CMT_MSC, MCGEN);
+        //     NVIC_DISABLE_IRQ(IRQ_CMT);
+        // }
     }
     else
     {
