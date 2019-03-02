@@ -228,7 +228,7 @@ void ClockGenerator::setPeriod(unsigned long period)
     CMT_CMD2 = (period - 1) & 255;
     CMT_CMD3 = (period >> 8) & 255;
     CMT_CMD4 = period & 255;
-    CMT_OC = 0x60;
+    CMT_OC = 0x20; // CMTPOL bit set to 0
     CMT_MSC = (cdiv << 5) | 0x0A; // baseband mode, do not set MCGEN
 }
 

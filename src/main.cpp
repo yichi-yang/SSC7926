@@ -21,17 +21,17 @@ void setup()
     // FsFile file;
 
     Serial.begin(115200);
-    while (!Serial)
-    {
-    }
-    do
-    {
-        delay(10);
-    } while (Serial.available() && Serial.read());
-    Serial.println("OK");
-    while (!Serial.available())
-    {
-    }
+    // while (!Serial)
+    // {
+    // }
+    // do
+    // {
+    //     delay(10);
+    // } while (Serial.available() && Serial.read());
+    // Serial.println("OK");
+    // while (!Serial.available())
+    // {
+    // }
 
     clock.setPeriod(3600);
     clock.config(8100, bufferLen / 2, 64);
