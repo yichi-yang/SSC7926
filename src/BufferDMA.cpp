@@ -48,6 +48,8 @@ void BufferDMA::start()
     dmaChannel->triggerAtHardwareEvent(DMAMUX_SOURCE_ADC); // start DMA channel when ADC finishes a conversion
     dmaChannel->attachInterrupt(dma_half_complete_isr);
 
+    uint32_t temp = *ADC_RA; // clear ADC completion bit    
+
     Serial.print("DADDR=");
     Serial.println((uint32_t)dmaChannel->TCD->DADDR, HEX);
     Serial.print("CITER=");
@@ -59,8 +61,6 @@ void BufferDMA::start()
     Serial.println((uint32_t)dmaChannel->TCD->DADDR, HEX);
     Serial.print("CITER=");
     Serial.println((uint32_t)dmaChannel->TCD->CITER);
-
-    dmaChannel->destinationBuffer((uint16_t *)p_elems, sizeof(uint16_t) * b_size);
 
     //digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
 }
