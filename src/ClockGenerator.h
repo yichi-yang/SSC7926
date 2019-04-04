@@ -8,6 +8,7 @@
 #endif
 
 #include "ADC.h"
+#include "pinDef.h"
 
 /* // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -45,11 +46,6 @@
 #define IROL 7
 #define CMTPOL 6
 #define IROPEN 5
-
-// Pin ROG and STEP
-#define PIN_ROG 27
-#define PIN_STEP 25
-#define PIN_SIG A9
 
 class ClockGenerator
 {

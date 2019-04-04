@@ -1,5 +1,5 @@
 #include <ClockGenerator.h>
-
+#include "pinDef.h"
 #include <avr/interrupt.h>
 
 // void (*ClockGenerator::onOverflow)() = 0;
@@ -228,7 +228,7 @@ void ClockGenerator::setPeriod(unsigned long period)
     CMT_CMD2 = (period - 1) & 255;
     CMT_CMD3 = (period >> 8) & 255;
     CMT_CMD4 = period & 255;
-    CMT_OC = 0x60;
+    CMT_OC = 0x20;                // CMTPOL bit set to 0
     CMT_MSC = (cdiv << 5) | 0x0A; // baseband mode, do not set MCGEN
 }
 
@@ -247,10 +247,11 @@ void ClockGenerator::enable()
 {
     // ClockGenerator::enabled = 1;
     current_cycle = 0;
-    current_line = 0;
+    current_line = -2;
+    step_pin_status = LOW;
     pinMode(PIN_ROG, OUTPUT);
     pinMode(PIN_STEP, OUTPUT);
-    pinMode(PIN_SIG, INPUT);
+    pinMode(PIN_SIG_OUT, INPUT);
     NVIC_ENABLE_IRQ(IRQ_CMT);
     bitSet(CMT_MSC, MCGEN);
 }
@@ -295,13 +296,16 @@ void cmt_isr(void)
         digitalWriteFast(PIN_ROG, HIGH);
     }
 
-    if (ClockGenerator::adc_ptr->adc0->isConverting())
+    if (ClockGenerator::current_line >= 0 && ClockGenerator::current_cycle >= 102 && ClockGenerator::current_cycle <= 8027)
     {
-        digitalWriteFast(LED_BUILTIN, HIGH);
-        for (;;)
-            ;
+        if (ClockGenerator::adc_ptr->adc0->isConverting())
+        {
+            digitalWriteFast(LED_BUILTIN, HIGH);
+            for (;;)
+                ;
+        }
+        ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG_OUT);
     }
-    ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG);
 
     if ((ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
     {

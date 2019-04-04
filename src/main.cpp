@@ -4,7 +4,6 @@
 #include "BufferDMA.h"
 #include "SdFs.h"
 
-const int readPin = A9;
 const int bufferLen = 16384;
 
 void errorHalt(const char *msg, SdFs *sd);
@@ -33,8 +32,8 @@ void setup()
     {
     }
 
-    clock.setPeriod(3600);
-    clock.config(64, bufferLen / 2, 16);
+    clock.setPeriod(3200);
+    clock.config(7926, 8050, 16);
 
     adc->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);
     adc->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
@@ -52,7 +51,7 @@ void setup()
     }
     Serial.println("\nFIFO SDIO mode.");
 
-    if (!file.open("TeensyDemo.bin", O_RDWR | O_CREAT))
+    if (!file.open("TeensyDemo01.bin", O_RDWR | O_CREAT))
     {
         errorHalt("open failed", &sd);
     }
@@ -73,7 +72,7 @@ void setup()
                 for (;;)
                     ;
             }
-            Serial.println("Data");
+            Serial.print(".");
             if ((sizeof(buffer) / 2) != file.write((void *)(buffer + second_half * bufferLen / 2), sizeof(buffer) / 2))
             {
                 errorHalt("write failed", &sd);
