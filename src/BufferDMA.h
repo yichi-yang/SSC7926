@@ -1,15 +1,21 @@
 #ifndef SSC7926_BUFFERDMA_H
 #define SSC7926_BUFFERDMA_H
 
-#include <Arduino.h> // for digitalWrite
+#include <Arduino.h>
 #include "DMAChannel.h"
+
+#define READY 1
+#define OVERRUN -1
 
 void dma_half_complete_isr();
 
-// extern volatile int8_t data_ready;
-// extern DMAChannel *dmaChannel;
-
-/** Class RingBufferDMA implements a DMA ping-pong buffer of fixed size
+/** Class BufferDMA implements a DMA ping-pong buffer of fixed size
+ * 
+ *  While one half of the buffer is being filled up by DMA transfers, the
+ *  other half can be safely accessed and processed.
+ * 
+ *  Unfortunately since member functions cannot be used as ISRs,
+ *  it is not possible to use multiple instances of BufferDMA
 */
 class BufferDMA
 {
@@ -23,53 +29,29 @@ class BufferDMA
     //! Start DMA operation
     static void start();
 
-    friend void dma_half_complete_isr();
+    //! Stop DMA operation
+    static void stop();
 
-    static volatile int8_t data_ready;
+    //! return 1 when half-buffer is ready to be read, 0 otherwise. return -1 when buffer is overrun
+    static int8_t ready();
+
+    //! return address of the half buffer to be read and mark it as read.
+    static volatile int16_t *read_half();
+
+    //! return number of remaining elements to be read.
+    static volatile size_t remain();
 
   private:
     static DMAChannel *dmaChannel;
     static volatile int16_t *p_elems;
     static uint16_t b_size;
-    static uint8_t ADC_number;
-    static volatile uint32_t *ADC_RA;
+    static uint8_t adc_number;
+    static volatile uint32_t *adc_RA;
+    static volatile bool second_half;
+    static volatile int8_t data_ready;
 
-    //! Length of the buffer
-    // static uint16_t size() { return b_size; }
-
-    //! Pointer to the data
-    // static volatile int16_t *const buffer() { return p_elems; }
-
-    //! DMAChannel to handle all low level DMA code.
-    // static DMAChannel *dmaChannel;
-
-    // the buffer needs to be aligned, so use malloc instead of new
-    // see http://stackoverflow.com/questions/227897/solve-the-memory-alignment-in-c-interview-question-that-stumped-me/
-    //uint8_t alignment;
-    //void *p_mem;
-
-    //! Start pointer: Read here
-    // uint16_t b_start;
-    //! End pointer: Write here
-    // uint16_t b_end;
-
-    //! Pointer to the elements of the buffer
-    // static volatile int16_t *p_elems;
-
-    // static volatile int8_t half_complete;
-
-    //! Size of buffer
-    // static uint16_t b_size;
-
-    //   protected:
-    //   private:
-    //! ADC module of the instance
-    // static uint8_t ADC_number;
-
-    // //! Increases the pointer modulo 2*size-1
-    // uint16_t increase(uint16_t p);
-
-    // static volatile uint32_t *ADC_RA;
+    //! Half complete ISR is called everytime the buffer is half full
+    friend void dma_half_complete_isr();
 };
 
-#endif // RINGBUFFERDMA_H
+#endif

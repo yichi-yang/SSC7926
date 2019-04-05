@@ -64,9 +64,9 @@ class ClockGenerator
     friend void cmt_isr(void);
 
   private:
-    volatile static uint32_t current_line, current_cycle;
-    static uint8_t step_pin_status;
-    static uint32_t max_line, cycle_per_line, cycle_per_step;
+    volatile static int32_t current_line, current_cycle;
+    volatile static uint8_t step_pin_status;
+    static int32_t max_line, cycle_per_line, cycle_per_step;
     static ADC *adc_ptr;
 };
 

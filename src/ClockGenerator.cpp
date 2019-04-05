@@ -5,12 +5,12 @@
 // void (*ClockGenerator::onOverflow)() = 0;
 // uint8_t ClockGenerator::enabled = 0;
 
-volatile uint32_t ClockGenerator::current_line = 0;
-volatile uint32_t ClockGenerator::current_cycle;
-uint8_t ClockGenerator::step_pin_status = LOW;
-uint32_t ClockGenerator::max_line = 0;
-uint32_t ClockGenerator::cycle_per_line = 0;
-uint32_t ClockGenerator::cycle_per_step = 0;
+volatile int32_t ClockGenerator::current_line = -2;
+volatile int32_t ClockGenerator::current_cycle;
+volatile uint8_t ClockGenerator::step_pin_status = LOW;
+int32_t ClockGenerator::max_line = 0;
+int32_t ClockGenerator::cycle_per_line = 0;
+int32_t ClockGenerator::cycle_per_step = 0;
 ADC *ClockGenerator::adc_ptr = nullptr;
 
 ClockGenerator::ClockGenerator(ADC *p)

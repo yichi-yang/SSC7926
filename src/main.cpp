@@ -4,13 +4,14 @@
 #include "BufferDMA.h"
 #include "SdFs.h"
 
+#define PGM_HEADER "P5 7926 7926 4095\n"
+
 const int bufferLen = 16384;
 
 void errorHalt(const char *msg, SdFs *sd);
 
 void setup()
 {
-    bool second_half = false;
     ADC *adc = new ADC();
     alignas(8) static volatile int16_t buffer[bufferLen];
     memset((void *)buffer, 0x0, sizeof(buffer));
@@ -51,7 +52,7 @@ void setup()
     }
     Serial.println("\nFIFO SDIO mode.");
 
-    if (!file.open("TeensyDemo01.bin", O_RDWR | O_CREAT))
+    if (!file.open("TeensyDemo01.pgm", O_RDWR | O_CREAT))
     {
         errorHalt("open failed", &sd);
     }
@@ -60,64 +61,54 @@ void setup()
         errorHalt("truncate failed", &sd);
     }
 
+    if (sizeof(PGM_HEADER) != file.write((void *)(PGM_HEADER), sizeof(PGM_HEADER)))
+    {
+        errorHalt("write failed", &sd);
+    }
+
     clock.enable();
 
     while (clock.is_active())
     {
-        if (BufferDMA::data_ready)
+        if (dmaBuffer.ready() == READY)
         {
-            if (BufferDMA::data_ready > 1)
-            {
-                Serial.print("Buffer overrun");
-                for (;;)
-                    ;
-            }
             Serial.print(".");
-            if ((sizeof(buffer) / 2) != file.write((void *)(buffer + second_half * bufferLen / 2), sizeof(buffer) / 2))
+            if ((sizeof(buffer) / 2) != file.write((void *)(dmaBuffer.read_half()), sizeof(buffer) / 2))
             {
                 errorHalt("write failed", &sd);
             }
-            // Serial.println("SD");
-            // Serial.print("Read buffer: ");
-            // memcpy((void *)readout_buffer, (void *)(buffer + second_half * bufferLen / 2), sizeof(readout_buffer));
-            // // memset((void *)(buffer + second_half * bufferLen / 2), 0x0, sizeof(readout_buffer));
-            // for (int k = 0; k < bufferLen / 2; k++)
-            // {
-            //     Serial.printf("%6hu", readout_buffer[k]);
-            // }
-            // Serial.println();
-            BufferDMA::data_ready--;
-            second_half = !second_half;
+        }
+        else if (dmaBuffer.ready() == OVERRUN)
+        {
+            Serial.println("buffer overrun");
+            while (true)
+                ;
         }
     }
 
     delay(100);
 
-    if (BufferDMA::data_ready)
+    if (dmaBuffer.ready() == READY)
     {
-        if (BufferDMA::data_ready > 1)
-        {
-            Serial.print("Buffer overrun");
-            for (;;)
-                ;
-        }
-        Serial.println("Data+");
-        if ((sizeof(buffer) / 2) != file.write((void *)(buffer + second_half * bufferLen / 2), sizeof(buffer) / 2))
+        Serial.print(".");
+        if ((sizeof(buffer) / 2) != file.write((void *)(dmaBuffer.read_half()), sizeof(buffer) / 2))
         {
             errorHalt("write failed", &sd);
         }
-        // Serial.println("SD");
-        // Serial.print("Read buffer: ");
-        // memcpy((void *)readout_buffer, (void *)(buffer + second_half * bufferLen / 2), sizeof(readout_buffer));
-        // // memset((void *)(buffer + second_half * bufferLen / 2), 0x0, sizeof(readout_buffer));
-        // for (int k = 0; k < bufferLen / 2; k++)
-        // {
-        //     Serial.printf("%6hu", readout_buffer[k]);
-        // }
-        // Serial.println();
-        BufferDMA::data_ready--;
-        second_half = !second_half;
     }
+    else if (dmaBuffer.ready() == OVERRUN)
+    {
+        Serial.println("buffer overrun");
+        while (true)
+            ;
+    }
+
+    if (sizeof(int16_t) * dmaBuffer.remain() != file.write((void *)(dmaBuffer.read_half()), sizeof(int16_t) * dmaBuffer.remain()))
+    {
+        errorHalt("write failed", &sd);
+    }
+
+    Serial.println((int)dmaBuffer.remain());
 
     file.close();
     Serial.println("finished");
