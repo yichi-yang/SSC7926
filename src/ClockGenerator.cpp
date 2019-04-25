@@ -5,7 +5,7 @@
 // void (*ClockGenerator::onOverflow)() = 0;
 // uint8_t ClockGenerator::enabled = 0;
 
-volatile int32_t ClockGenerator::current_line = -2;
+volatile int32_t ClockGenerator::current_line = -10;
 volatile int32_t ClockGenerator::current_cycle;
 volatile uint8_t ClockGenerator::step_pin_status = LOW;
 int32_t ClockGenerator::max_line = 0;
@@ -247,7 +247,7 @@ void ClockGenerator::enable()
 {
     // ClockGenerator::enabled = 1;
     current_cycle = 0;
-    current_line = -2;
+    current_line = -10;
     step_pin_status = LOW;
     pinMode(PIN_ROG, OUTPUT);
     pinMode(PIN_STEP, OUTPUT);
