@@ -34,7 +34,7 @@ void setup()
     }
 
     clock.setPeriod(3200);
-    clock.config(7926, 8050, 16);
+    clock.config(7926, 8050, 1744);
 
     adc->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);
     adc->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);

@@ -307,7 +307,7 @@ void cmt_isr(void)
         ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG_OUT);
     }
 
-    if ((ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
+    if (ClockGenerator::current_line >= 0 && (ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
     {
         digitalWriteFast(PIN_STEP, HIGH);
         ClockGenerator::step_pin_status = HIGH;
