@@ -3,7 +3,7 @@
 
 // Pin ROG and STEP
 #define PIN_ROG 27
-#define PIN_SIG_OUT 16
+#define PIN_SIG 16
 
 #define PIN_STEP 38
 #define PIN_DIR 34

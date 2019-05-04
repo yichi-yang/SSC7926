@@ -253,7 +253,7 @@ void ClockGenerator::enable()
     step_pin_status = LOW;
     pinMode(PIN_ROG, OUTPUT);
     pinMode(PIN_STEP, OUTPUT);
-    pinMode(PIN_SIG_OUT, INPUT);
+    pinMode(PIN_SIG, INPUT);
     NVIC_ENABLE_IRQ(IRQ_CMT);
     bitSet(CMT_MSC, MCGEN);
 }
@@ -297,7 +297,7 @@ void cmt_isr(void)
     {
         digitalWriteFast(PIN_ROG, HIGH);
     }
-    
+
     digitalWriteFast(PIN_TIME_TEST, HIGH);
     if (ClockGenerator::current_line >= 0 && ClockGenerator::current_cycle >= 102 && ClockGenerator::current_cycle <= 8027)
     {
@@ -307,7 +307,7 @@ void cmt_isr(void)
             for (;;)
                 ;
         }
-        ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG_OUT);
+        ClockGenerator::adc_ptr->adc0->startSingleRead(PIN_SIG);
     }
 
     if (ClockGenerator::current_line >= 0 && (ClockGenerator::current_cycle + ClockGenerator::current_line * ClockGenerator::cycle_per_line) % ClockGenerator::cycle_per_step == 0)
