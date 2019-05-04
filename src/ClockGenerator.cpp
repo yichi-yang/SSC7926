@@ -295,7 +295,7 @@ void cmt_isr(void)
     {
         digitalWriteFast(PIN_ROG, HIGH);
     }
-
+    
     if (ClockGenerator::current_line >= 0 && ClockGenerator::current_cycle >= 102 && ClockGenerator::current_cycle <= 8027)
     {
         if (ClockGenerator::adc_ptr->adc0->isConverting())

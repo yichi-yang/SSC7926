@@ -20,6 +20,16 @@ void setup()
     SdFs sd;
     FsFile file;
 
+    pinMode(PIN_STEP_BTN, INPUT_PULLUP);
+    pinMode(PIN_DIR_BTN, INPUT_PULLUP);
+    pinMode(PIN_STEP, OUTPUT);
+    pinMode(PIN_DIR, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWriteFast(PIN_STEP, LOW);
+    digitalWriteFast(PIN_DIR, LOW);
+    digitalWriteFast(LED_BUILTIN, LOW);
+    delayMicroseconds(200);
+
     Serial.begin(115200);
     while (!Serial)
     {
@@ -31,10 +41,23 @@ void setup()
     Serial.println("OK");
     while (!Serial.available())
     {
+        while (digitalReadFast(PIN_STEP_BTN) == LOW)
+        {
+            digitalWriteFast(LED_BUILTIN, HIGH);
+            digitalWriteFast(PIN_DIR, digitalReadFast(PIN_DIR_BTN));
+            delayMicroseconds(500);
+            digitalWriteFast(PIN_STEP, HIGH);
+            delayMicroseconds(3);
+            digitalWriteFast(PIN_STEP, LOW);
+            delayMicroseconds(500);
+        }
+        digitalWriteFast(LED_BUILTIN, LOW);
     }
 
+    digitalWriteFast(PIN_DIR, LOW);
+
     clock.setPeriod(3200);
-    clock.config(7926, 8050, 1744);
+    clock.config(7926, 8050, 1812);
 
     adc->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);
     adc->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
@@ -70,6 +93,14 @@ void setup()
 
     while (clock.is_active())
     {
+        if (digitalReadFast(PIN_STEP_BTN) == LOW)
+        {
+            clock.disable();
+            file.close();
+            Serial.println("halt");
+            while (true)
+                ;
+        }
         if (dmaBuffer.ready() == READY)
         {
             Serial.print(".");
