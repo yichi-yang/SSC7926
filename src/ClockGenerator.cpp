@@ -20,7 +20,9 @@ ClockGenerator::ClockGenerator(ADC *p)
     step_pin_status = LOW;
     NVIC_SET_PRIORITY(IRQ_CMT, 0);
     pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(PIN_TIME_TEST, OUTPUT);
     digitalWriteFast(LED_BUILTIN, LOW);
+    digitalWriteFast(PIN_TIME_TEST, LOW);
 }
 
 void ClockGenerator::setPeriod(unsigned long period)
@@ -296,6 +298,7 @@ void cmt_isr(void)
         digitalWriteFast(PIN_ROG, HIGH);
     }
     
+    digitalWriteFast(PIN_TIME_TEST, HIGH);
     if (ClockGenerator::current_line >= 0 && ClockGenerator::current_cycle >= 102 && ClockGenerator::current_cycle <= 8027)
     {
         if (ClockGenerator::adc_ptr->adc0->isConverting())
@@ -334,6 +337,7 @@ void cmt_isr(void)
         ClockGenerator::current_cycle++;
     }
     // Serial.printf("CMT ISR\n");
+    digitalWriteFast(PIN_TIME_TEST, LOW);
 }
 
 void ClockGenerator::config(uint32_t _line_number, uint32_t _cycle_per_line, uint32_t _cycle_per_step)
